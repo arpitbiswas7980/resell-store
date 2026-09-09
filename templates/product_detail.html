@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.title }} - Order Now</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-pink-600 text-white p-4 shadow font-bold text-center">
+        <a href="{% url 'home' %}">← Back to Store</a>
+    </header>
+
+    <div class="max-w-md mx-auto bg-white p-4 my-4 rounded-lg shadow">
+        <!-- Image Gallery -->
+        <div class="space-y-2">
+            <img id="mainImage" src="{{ product.primary_image }}" class="w-full rounded-lg h-72 object-cover border">
+            <div class="flex space-x-2 overflow-x-auto pb-1">
+                {% for img in product.images.all %}
+                <img src="{{ img.image.url }}" class="w-16 h-16 object-cover rounded border-2 border-transparent hover:border-pink-600 cursor-pointer" onclick="document.getElementById('mainImage').src = this.src;">
+                {% endfor %}
+            </div>
+        </div>
+
+        <h1 class="text-lg font-bold text-gray-800 mt-3">{{ product.title }}</h1>
+        <div class="flex items-center space-x-2 my-2">
+            <span class="text-2xl font-bold text-gray-900">₹{{ product.price }}</span>
+            <span class="text-sm text-gray-400 line-through">₹{{ product.original_price }}</span>
+            <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded font-bold">Cash on Delivery</span>
+        </div>
+        <p class="text-gray-600 text-xs my-2 leading-relaxed whitespace-pre-line">{{ product.description }}</p>
+
+        <!-- Order Form -->
+        <form method="POST" class="mt-4 border-t pt-4 space-y-3">
+            {% csrf_token %}
+            <div>
+                <label class="block text-xs font-bold text-gray-700">Select Size:</label>
+                <select name="size" required class="w-full border p-2 rounded text-sm mt-1">
+                    {% for size in sizes %}
+                    <option value="{{ size }}">{{ size }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-700">Full Name:</label>
+                <input type="text" name="name" required placeholder="Customer Name" class="w-full border p-2 rounded text-sm mt-1">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-700">Mobile Number:</label>
+                <input type="tel" name="phone" required placeholder="10-digit mobile number" class="w-full border p-2 rounded text-sm mt-1">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-700">Delivery Address:</label>
+                <textarea name="address" required placeholder="House No, Road / Area name" class="w-full border p-2 rounded text-sm mt-1" rows="2"></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700">Pincode:</label>
+                    <input type="text" name="pincode" required placeholder="PIN Code" class="w-full border p-2 rounded text-sm mt-1">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700">City / District:</label>
+                    <input type="text" name="city" required placeholder="City" class="w-full border p-2 rounded text-sm mt-1">
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-pink-600 text-white font-bold py-3 rounded-lg shadow hover:bg-pink-700 mt-4 text-base">
+                Confirm Order (Cash on Delivery)
+            </button>
+        </form>
+    </div>
+</body>
+</html>
